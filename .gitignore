@@ -1,0 +1,13 @@
+cmake-build-debug/
+.idea
+Makefile
+CMakeCache.txt
+cmake_install.cmake
+.cmake/
+./code
+pai/
+test.sh
+clear.sh
+makedata.py
+my.out
+sample.out
