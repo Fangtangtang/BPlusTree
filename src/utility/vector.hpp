@@ -5,6 +5,8 @@
 #include <iostream>
 #include <climits>
 #include <cstddef>
+#include "file_manager.hpp"
+
 //size_t 无符号整数，做数组下标
 namespace sjtu {
 /**

@@ -11,3 +11,5 @@ clear.sh
 makedata.py
 my.out
 sample.out
+version0.hpp
+test.txt

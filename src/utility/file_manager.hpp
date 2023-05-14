@@ -16,7 +16,6 @@ template<class ValueType>
 class FileManager {
     static constexpr size_t value_size = sizeof(ValueType);
     std::fstream r_w_file;
-
 public:
     explicit FileManager(const std::string &file_name) {
         r_w_file.open(file_name);
@@ -35,10 +34,26 @@ public:
         r_w_file.read(reinterpret_cast<char *> (&valueType), value_size);
     }
 
+    void ReadEle(const long &start_addr, ValueType &valueType) {
+        r_w_file.seekg(start_addr);
+        r_w_file.read(reinterpret_cast<char *> (&valueType), value_size);
+    }
+
     long WriteEle(const long &start_addr, const int &move_num, ValueType valueType) {
         r_w_file.seekp(start_addr + move_num * value_size);
+        long addr = r_w_file.tellp();
         r_w_file.write(reinterpret_cast<char *> (&valueType), value_size);
-        return r_w_file.tellp();
+        return addr;
+    }
+
+    long WriteEle(ValueType valueType) {
+        r_w_file.seekp(0, std::ios::end);
+        long addr = r_w_file.tellp();
+        r_w_file.write(reinterpret_cast<char *> (&valueType), value_size);
+        r_w_file.seekg(addr);
+//        r_w_file.read(reinterpret_cast<char *> (&valueType), value_size);
+//        std::cout<<"TEST:"<<valueType<<'\n';
+        return addr;
     }
 };
 

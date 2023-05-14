@@ -7,7 +7,7 @@
 #include <iostream>
 
 struct Key {
-    char index[65];
+    char index[64];
     int value = 0;
 
     Key() {
