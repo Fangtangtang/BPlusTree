@@ -4,7 +4,6 @@
 #include <fstream>
 #include <iostream>
 #include <string>
-#include <queue>
 #include "vector.hpp"
 #include "file_manager.hpp"
 
@@ -12,7 +11,7 @@ template<class Key, class Value, class Compare1, class Compare2, class Compare3>
 class BPlusTree {
 private:
     static constexpr int node_size = 160;
-    static constexpr int block_size = 1500;
+    static constexpr int block_size = 1024;
 
     /*
      * ele in node and block
@@ -79,14 +78,6 @@ private:
             key[1] = keyGroup2;
         }
 
-        friend std::ostream &operator<<(std::ostream &os, const Node &node) {
-            os << "NODE " << node.size << '\n';
-            for (int i = 0; i < node.size; ++i) {
-                os << node.key[i].GetIndex() << ' ' << node.key[i].address << '\n';
-            }
-            os << '\n';
-            return os;
-        }
     };
 
     //all the blocks are linked like a linkList
@@ -103,14 +94,6 @@ private:
             storage[0].address = addr;
         }
 
-        friend std::ostream &operator<<(std::ostream &os, const Block &block) {
-            os << "BLOCK " << block.size << '\n';
-            for (int i = 0; i < block.size; ++i) {
-                os << block.storage[i].GetIndex() << ' ' << block.storage[i].GetValue() << '\n';
-            }
-            os << '\n';
-            return os;
-        }
     };
 
     /*
@@ -135,9 +118,6 @@ private:
 
     //associated with file when construct the tree
     std::fstream r_w_tree;
-//    std::fstream r_w_list;
-
-
 
     static Compare1 compare1;
     static Compare2 compare2;
@@ -189,55 +169,6 @@ public:
                 WriteNode(son_of_root[i], root_node.key[i].address);
             }
         }
-    }
-
-    void PrintBlock(std::queue<Block> block_queue) {
-        Block first_block = block_queue.front();
-        std::cout << "PRINT BLOCK AS LEAF\n";
-        while (!block_queue.empty()) {
-            current_block = block_queue.front();
-            block_queue.pop();
-            std::cout << current_block;
-        }
-        std::cout << "PRINT BLOCK AS LIST\n";
-        while (true) {
-            std::cout << first_block;
-            if (first_block.next_block_address > 0) {
-                ReadBlock(first_block, first_block.next_block_address);
-            } else break;
-        }
-    }
-
-    void Print() {
-        //write root_node
-        WriteNode(root_node, root);
-        if (!root_node.son_is_block) {
-            int num = root_node.size;
-            for (int i = 0; i < num; ++i) {
-                WriteNode(son_of_root[i], root_node.key[i].address);
-            }
-        }
-        std::queue<Node> print_queue;
-        std::queue<Block> block_queue;
-        Node print_node, son;
-        Block son_block;
-        print_queue.push(root_node);
-        while (!print_queue.empty()) {
-            print_node = print_queue.front();
-            print_queue.pop();
-            std::cout << print_node;
-            if (print_node.son_is_block) {
-                for (int i = 0; i < print_node.size; ++i) {
-                    ReadBlock(son_block, print_node.key[i].address);
-                    block_queue.push(son_block);
-                }
-            } else
-                for (int i = 0; i < print_node.size; ++i) {
-                    ReadNode(son, print_node.key[i].address);
-                    print_queue.push(son);
-                }
-        }
-        PrintBlock(block_queue);
     }
 
     //insert downwards
