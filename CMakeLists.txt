@@ -10,4 +10,6 @@ add_executable(code
         src/utility/exception.hpp
         src/head-file/key.hpp
         src/head-file/value.hpp
-        src/utility/file_manager.hpp )
+        src/utility/file_manager.hpp
+#        pai/try.cpp
+        )

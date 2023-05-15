@@ -8,9 +8,10 @@ bool CMP(const int &a, const int &b) {
     return a > b;
 }
 
+FileManager<int> fileManager("list_file");
+
 bool print(sjtu::vector<long> vec, const string &str) {
     if (vec.empty()) return false;
-    FileManager<int> fileManager(str);
     auto iter = vec.begin();
     int value;
 //    fileManager.ReadEle(8,value);
@@ -25,7 +26,7 @@ bool print(sjtu::vector<long> vec, const string &str) {
 
 int main() {
 //    freopen("my.out", "w", stdout);
-    BPlusTree<Key, int, cmp, cmp, cmp> tree("my_file", "list_file");
+    BPlusTree<Key, int, cmp, cmp, cmp> tree("my_file");
     int n;
     int cnt = 0;
     cin >> n;
@@ -46,7 +47,7 @@ int main() {
         if (cmd == "insert") {
             cin >> value;
             Key key(index, value);
-            tree.Insert(key, value);
+            tree.Insert(key, value, fileManager);
         }
         if (cmd == "delete") {
             cin >> value;
@@ -59,7 +60,7 @@ int main() {
 //            PrintVector(tree.StrictFind(key), CMP, true);
 //            bool flag = tree.StrictFind(key).traverse();
 
-            bool flag = print(tree.StrictFind(key),"list_file");
+            bool flag = print(tree.StrictFind(key), "list_file");
             if (!flag) cout << "null";
             std::cout << "\n";
         }
