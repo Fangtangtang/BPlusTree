@@ -25,6 +25,11 @@ bool print(sjtu::vector<long> vec, const string &str) {
 int main() {
 //    freopen("my.out", "w", stdout);
     BPlusTree<Key, int, cmp, cmp, cmp> tree("my_file");
+    //将iostream和stdio解绑
+    ios_base::sync_with_stdio(false);
+    //将输入输出流解绑
+    cin.tie(nullptr);
+    cout.tie(nullptr);
     int n;
     int cnt = 0;
     cin >> n;

@@ -127,12 +127,10 @@ public:
 
     BPlusTree(const std::string &file_name) : cmp1(), cmp2() {
         r_w_tree.open(file_name);
-
         if (!r_w_tree.good()) {//doesn't exist
             r_w_tree.open(file_name, std::ios::out);
             r_w_tree.close();
             r_w_tree.open(file_name);
-
             r_w_tree.seekp(0);//将指针定位到文件开头
             r_w_tree.write(reinterpret_cast<char *> (&root), sizeof(root));
             root_node.node_type = 0;
@@ -290,11 +288,6 @@ private:
             }
         }
         return ans;
-    }
-
-    template<class T>
-    T Max(const T &a, const T &b) {
-        return b < a ? a : b;
     }
 
     inline void ReadNode(Node &current, const long &iter) {
