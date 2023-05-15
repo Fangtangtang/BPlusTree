@@ -12,7 +12,7 @@ template<class Key, class Value, class Compare1, class Compare2, class Compare3>
 class BPlusTree {
 private:
     static constexpr int node_size = 150;
-    static constexpr int block_size = 1024;
+    static constexpr int block_size = 2048;
 
     /*
      * ele in node and block
@@ -155,12 +155,8 @@ public:
 
             r_w_tree.seekp(0);//将指针定位到文件开头
             r_w_tree.write(reinterpret_cast<char *> (&root), sizeof(root));
-//            std::cout<<"BPT POSE:" <<r_w_tree.tellg()<<'\n';
-
             root_node.node_type = 0;
             r_w_tree.seekp(0, std::ios::end);
-//            std::cout<<"BPT POSE:" <<r_w_tree.tellg()<<'\n';
-
             root = r_w_tree.tellp();
             r_w_tree.write(reinterpret_cast<char *> (&root_node), sizeof(root_node));//root_node may be empty
         } else {
@@ -184,8 +180,6 @@ public:
     ~BPlusTree() {
         //write root
         r_w_tree.seekp(0);//将指针定位到文件开头
-//        std::cout<<"BPT POSE:" <<r_w_tree.tellg()<<'\n';
-
         r_w_tree.write(reinterpret_cast<char *>(&root), sizeof(root));
         //write root_node
         WriteNode(root_node, root);
@@ -379,8 +373,6 @@ private:
 
     inline void WriteNode(Node current, const long &iter) {
         r_w_tree.seekp(iter);
-//        std::cout<<"BPT POSE:" <<r_w_tree.tellg()<<'\n';
-
         r_w_tree.write(reinterpret_cast<char *> (&current), sizeof(Node));
     }
 
@@ -391,8 +383,6 @@ private:
 
     inline void WriteBlock(Block current, const long &iter) {
         r_w_tree.seekp(iter);
-//        std::cout<<"BPT POSE:" <<r_w_tree.tellg()<<'\n';
-
         r_w_tree.write(reinterpret_cast<char *> (&current), sizeof(Block));
     }
 

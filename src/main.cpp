@@ -14,8 +14,6 @@ bool print(sjtu::vector<long> vec, const string &str) {
     if (vec.empty()) return false;
     auto iter = vec.begin();
     int value;
-//    fileManager.ReadEle(8,value);
-//    cout<<"TE:"<<value<<'\n';
     while (iter != vec.end()) {
         fileManager.ReadEle(*iter, value);
         cout << value << ' ';
@@ -37,13 +35,6 @@ int main() {
         ++cnt;
         cin >> cmd;
         cin >> index;
-//        if (cnt == 635) {
-//            cout << "!!!\n";
-//            cout<<cnt<<"-----------------------\n";
-//            tree.Print();
-//            cout << "------------------------------\n";
-//        }
-//        Index index1(index);
         if (cmd == "insert") {
             cin >> value;
             Key key(index, value);
@@ -54,18 +45,12 @@ int main() {
             Key key(index, value);
             tree.Delete(key);
         }
-        //index-based find
         if (cmd == "find") {
             Key key(index);
-//            PrintVector(tree.StrictFind(key), CMP, true);
-//            bool flag = tree.StrictFind(key).traverse();
-
             bool flag = print(tree.StrictFind(key), "list_file");
             if (!flag) cout << "null";
             std::cout << "\n";
         }
-//        tree.Print();
     }
-//    tree.Print();
     return 0;
 }
