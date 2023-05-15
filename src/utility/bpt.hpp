@@ -10,8 +10,8 @@
 template<class Key, class Value, class Compare1, class Compare2, class Compare3>
 class BPlusTree {
 private:
-    static constexpr int node_size = 180;
-    static constexpr int block_size = 1024;
+    static constexpr int node_size = 178;
+    static constexpr int block_size = 1200;
 
     /*
      * ele in node and block
