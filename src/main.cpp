@@ -13,6 +13,8 @@ bool print(sjtu::vector<long> vec, const string &str) {
     FileManager<int> fileManager(str);
     auto iter = vec.begin();
     int value;
+//    fileManager.ReadEle(8,value);
+//    cout<<"TE:"<<value<<'\n';
     while (iter != vec.end()) {
         fileManager.ReadEle(*iter, value);
         cout << value << ' ';
@@ -22,7 +24,7 @@ bool print(sjtu::vector<long> vec, const string &str) {
 }
 
 int main() {
-//    freopen("my", "w", stdout);
+//    freopen("my.out", "w", stdout);
     BPlusTree<Key, int, cmp, cmp, cmp> tree("my_file", "list_file");
     int n;
     int cnt = 0;
