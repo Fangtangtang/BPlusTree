@@ -23,7 +23,7 @@ bool print(sjtu::vector<long> vec, const string &str) {
 }
 
 int main() {
-//    freopen("my.out", "w", stdout);
+    freopen("my.out", "w", stdout);
     BPlusTree<Key, int, cmp, cmp, cmp> tree("my_file");
     int n;
     int cnt = 0;

@@ -24,12 +24,7 @@ public:
             r_w_file.open(file_name, std::ios::out);
             r_w_file.close();
             r_w_file.open(file_name);
-
-            r_w_file.seekp(0);//将指针定位到文件开头
-        } else {
-            r_w_file.seekg(0);
         }
-//        r_w_file.close();
     }
 
     ~FileManager() {
@@ -43,13 +38,8 @@ public:
     }
 
     void ReadEle(const long &start_addr, ValueType &valueType) {
-//        r_w_file.open(file);
-
         r_w_file.seekg(start_addr);
         r_w_file.read(reinterpret_cast<char *> (&valueType), value_size);
-
-//        r_w_file.close();
-
     }
 
     long WriteEle(const long &start_addr, const int &move_num, ValueType valueType) {
@@ -60,13 +50,9 @@ public:
     }
 
     long WriteEle(ValueType valueType) {
-//        r_w_file.open(file);
         r_w_file.seekp(0, std::ios::end);
         long addr = r_w_file.tellp();
         r_w_file.write(reinterpret_cast<char *> (&valueType), value_size);
-
-//        r_w_file.close();
-
         return addr;
     }
 };
