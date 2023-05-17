@@ -20,7 +20,7 @@ bool print(sjtu::vector<long> vec, const string &str) {
 
 int main() {
 //    freopen("my.out", "w", stdout);
-    BPlusTree<Key, int, cmp1, cmp2, cmp2> tree("my_file");
+    BPlusTree<Key, int> tree("my_file");
     //将iostream和stdio解绑
     ios_base::sync_with_stdio(false);
     //将输入输出流解绑
@@ -39,7 +39,7 @@ int main() {
         if (cmd == "insert") {
             cin >> value;
             Key key(index, value);
-            tree.Insert(key, value, fileManager);
+            tree.Insert(key, value, fileManager,cmp1());
         }
         if (cmd == "delete") {
             cin >> value;
@@ -48,7 +48,7 @@ int main() {
         }
         if (cmd == "find") {
             Key key(index);
-            bool flag = print(tree.WeakFind(key), "list_file");
+            bool flag = print(tree.Find(key,cmp2()), "list_file");
             if (!flag) cout << "null";
             std::cout << "\n";
         }
