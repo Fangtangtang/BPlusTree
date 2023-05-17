@@ -169,9 +169,7 @@ public:
         }
     }
 
-    //insert downwards
-    //change key when getting down
-    //break upwards
+    //insert based on cmp1
     bool Insert(const Key &key, const Value &value, FileManager<Value> &r_w_value) {
         if (!root_node.size) {//empty
             Block new_block(key, r_w_value.WriteEle(value));
@@ -215,7 +213,7 @@ public:
         return flag;
     }
 
-    //delete and adjust upwards
+    //based on ==
     bool Delete(const Key &key) {
         long iter = 0;
         bool adjust_flag = true;
@@ -245,11 +243,8 @@ public:
         return vec;
     }
 
-    //TODO
-    sjtu::vector<long> ModerateFind(const Key &key) {
-        sjtu::vector<long> vec;
-        Find(key, cmp1, vec);
-        return vec;
+    long StrictFind(const Key &key, long &block_addr, int &ele_index) {
+        return Find(key, block_addr, ele_index);
     }
 
     //based on cmp2
@@ -259,6 +254,18 @@ public:
         return vec;
     }
 
+    //TODO
+    //find first ele based on cmpA
+    //find == based on cmpB
+    sjtu::vector<long> ModerateFind(const Key &key) {
+        sjtu::vector<long> vec;
+        Find(key, cmp1, vec);
+        return vec;
+    }
+    void RewriteKey(const Key &key, const long &block_addr, const int &ele_index) {
+        current_block.storage[ele_index].key = key;
+        WriteBlock(current_block, block_addr);
+    }
 
 private:
 
@@ -312,6 +319,7 @@ private:
         r_w_tree.write(reinterpret_cast<char *> (&current), sizeof(Block));
     }
 
+
     template<class Compare>
     void GetEle(const EleGroup &target, int index_in_block, const Compare &cmp, sjtu::vector<long> &vec) {
         while (index_in_block < current_block.size &&
@@ -351,12 +359,27 @@ private:
             ReadBlock(current_block, current_block.next_block_address);
             index_in_block = BinarySearch(current_block.storage, 0, current_block.size - 1, target, cmp);
         }
-        if(index_in_block==-1)return;
+        if (index_in_block == -1)return;
         if (!(cmp(current_block.storage[index_in_block], target) ||
               cmp(target, current_block.storage[index_in_block]))) {
             //print from current, along the linked blocks
             GetEle(target, index_in_block, cmp, vec);
         } else return;
+    }
+
+    long FindFirstEle(const Key &key, long &block_addr, int &ele_index) {
+        ReadBlock(current_block, block_addr);
+        EleGroup target(key);
+        ele_index = BinarySearch(current_block.storage, 0, current_block.size - 1, target);
+        while (ele_index == -1 && current_block.next_block_address != -1) {
+            block_addr = current_block.next_block_address;
+            ReadBlock(current_block, block_addr);
+            ele_index = BinarySearch(current_block.storage, 0, current_block.size - 1, target);
+        }
+        if (ele_index == -1)return -1;
+        if (current_block.storage[ele_index] == target) {
+            return current_block.storage[ele_index].address;
+        } else return -1;
     }
 
     void FindFirstEle(const Key &key, long &iter, sjtu::vector<long> &vec) {
@@ -367,11 +390,10 @@ private:
             ReadBlock(current_block, current_block.next_block_address);
             index_in_block = BinarySearch(current_block.storage, 0, current_block.size - 1, target, cmp2);
         }
-        if(index_in_block==-1) return;
+        if (index_in_block == -1)return;
         if (!(cmp2(current_block.storage[index_in_block], target) ||
               cmp2(target, current_block.storage[index_in_block])) &&
             cmp3(current_block.storage[index_in_block], target)) {
-            //print from current, along the linked blocks
             GetEle(target, index_in_block, vec);
         } else return;
     }
@@ -382,6 +404,13 @@ private:
         long iter;
         EleGroup target(key);
         FindNode(target, iter, cmp, vec);
+    }
+
+    //<
+    long Find(const Key &key, long &block_addr, int &ele_index) {
+        current_node = root_node;//start from root
+        EleGroup target(key);
+        return FindNode(target, block_addr, ele_index);
     }
 
     void Find(const Key &key) {
@@ -411,6 +440,20 @@ private:
             current_node = son_of_root[index];
         } else ReadNode(current_node, iter);
         FindNode(target, iter, cmp, vec);
+    }
+
+    long FindNode(const EleGroup &target, long &block_addr, int &ele_index) {
+        int index = BinarySearch(current_node.key, 0, current_node.size - 1, target);
+        if (index == -1) index = current_node.size - 1;
+        block_addr = current_node.key[index].address;
+        //end of recursion
+        if (current_node.son_is_block) {
+            return FindFirstEle(target.key, block_addr, ele_index);
+        }
+        if (!current_node.node_type) {//is_root
+            current_node = son_of_root[index];
+        } else ReadNode(current_node, block_addr);
+        FindNode(target, block_addr, ele_index);
     }
 
     void FindNode(const EleGroup &target, long &iter, sjtu::vector<long> &vec) {
