@@ -19,7 +19,7 @@ bool print(sjtu::vector<long> vec, const string &str) {
 }
 
 int main() {
-    freopen("my.out", "w", stdout);
+//    freopen("my.out", "w", stdout);
     BPlusTree<Key, int, cmp1, cmp2, cmp2> tree("my_file");
     //将iostream和stdio解绑
     ios_base::sync_with_stdio(false);

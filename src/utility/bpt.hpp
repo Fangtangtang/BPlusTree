@@ -351,6 +351,7 @@ private:
             ReadBlock(current_block, current_block.next_block_address);
             index_in_block = BinarySearch(current_block.storage, 0, current_block.size - 1, target, cmp);
         }
+        if(index_in_block==-1)return;
         if (!(cmp(current_block.storage[index_in_block], target) ||
               cmp(target, current_block.storage[index_in_block]))) {
             //print from current, along the linked blocks
@@ -366,6 +367,7 @@ private:
             ReadBlock(current_block, current_block.next_block_address);
             index_in_block = BinarySearch(current_block.storage, 0, current_block.size - 1, target, cmp2);
         }
+        if(index_in_block==-1) return;
         if (!(cmp2(current_block.storage[index_in_block], target) ||
               cmp2(target, current_block.storage[index_in_block])) &&
             cmp3(current_block.storage[index_in_block], target)) {
