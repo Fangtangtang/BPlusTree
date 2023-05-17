@@ -6,6 +6,9 @@ using namespace std;
 
 FileManager<int> fileManager("list_file");
 
+const cmp1 strict;
+const cmp2 weak;
+
 bool print(sjtu::vector<long> vec, const string &str) {
     if (vec.empty()) return false;
     auto iter = vec.begin();
@@ -39,7 +42,7 @@ int main() {
         if (cmd == "insert") {
             cin >> value;
             Key key(index, value);
-            tree.Insert(key, value, fileManager,cmp1());
+            tree.Insert(key, value, fileManager, strict);
         }
         if (cmd == "delete") {
             cin >> value;
@@ -48,7 +51,9 @@ int main() {
         }
         if (cmd == "find") {
             Key key(index);
-            bool flag = print(tree.Find(key,cmp2()), "list_file");
+            sjtu::vector<long> vec;
+            tree.Find(key, weak, vec);
+            bool flag = print(vec, "list_file");
             if (!flag) cout << "null";
             std::cout << "\n";
         }
