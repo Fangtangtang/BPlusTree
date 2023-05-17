@@ -11,7 +11,7 @@ template<class Key, class Value, class Compare1, class Compare2, class Compare3>
 class BPlusTree {
 private:
     static constexpr int node_size = 178;
-    static constexpr int block_size = 1100;
+    static constexpr int block_size = 1024;
 
     /*
      * ele in node and block
@@ -238,6 +238,7 @@ public:
         return flag;
     }
 
+    //based on cmp1
     sjtu::vector<long> StrictFind(const Key &key) {
         sjtu::vector<long> vec;
         Find(key, cmp1, vec);
@@ -251,6 +252,7 @@ public:
         return vec;
     }
 
+    //based on cmp2
     sjtu::vector<long> WeakFind(const Key &key) {
         sjtu::vector<long> vec;
         Find(key, cmp2, vec);
@@ -512,7 +514,9 @@ private:
     bool InsertInBlock(const Key &key, EleGroup target, const Value &value, FileManager<Value> &r_w_value) {
         int index_in_block = BinarySearch(current_block.storage, 0, current_block.size - 1, target);
         if (index_in_block == -1)index_in_block = current_block.size;
-        else if (current_block.storage[index_in_block].key == key) return false;
+        else if (!(cmp1(current_block.storage[index_in_block], target) ||
+                   cmp1(target, current_block.storage[index_in_block])))
+            return false;
         target.address = r_w_value.WriteEle(value);
         for (int i = current_block.size; i > index_in_block; --i) {
             current_block.storage[i] = current_block.storage[i - 1];

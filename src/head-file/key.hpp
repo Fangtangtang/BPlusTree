@@ -54,7 +54,14 @@ struct Key {
 };
 
 //关于key的compare类
-struct cmp {
+struct cmp1 {
+    bool operator()(const Key &a, const Key &b) const {
+        if (strcmp(a.index, b.index))return strcmp(a.index, b.index) < 0;
+        return a.value<b.value;
+    }
+};
+
+struct cmp2 {
     bool operator()(const Key &a, const Key &b) const {
         return strcmp(a.index, b.index) < 0;
     }

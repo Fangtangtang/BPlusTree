@@ -4,10 +4,6 @@
 
 using namespace std;
 
-bool CMP(const int &a, const int &b) {
-    return a > b;
-}
-
 FileManager<int> fileManager("list_file");
 
 bool print(sjtu::vector<long> vec, const string &str) {
@@ -23,8 +19,8 @@ bool print(sjtu::vector<long> vec, const string &str) {
 }
 
 int main() {
-//    freopen("my.out", "w", stdout);
-    BPlusTree<Key, int, cmp, cmp, cmp> tree("my_file");
+    freopen("my.out", "w", stdout);
+    BPlusTree<Key, int, cmp1, cmp2, cmp2> tree("my_file");
     //将iostream和stdio解绑
     ios_base::sync_with_stdio(false);
     //将输入输出流解绑
@@ -52,7 +48,7 @@ int main() {
         }
         if (cmd == "find") {
             Key key(index);
-            bool flag = print(tree.StrictFind(key), "list_file");
+            bool flag = print(tree.WeakFind(key), "list_file");
             if (!flag) cout << "null";
             std::cout << "\n";
         }
