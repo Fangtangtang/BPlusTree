@@ -1,6 +1,7 @@
 #include <iostream>
 #include "head-file/key.hpp"
-#include "utility/bpt.hpp"
+//#include "utility/bpt.hpp"
+#include "utility/BPlusTree.hpp"
 
 using namespace std;
 
@@ -22,8 +23,8 @@ bool print(sjtu::vector<long> vec, const string &str) {
 }
 
 int main() {
-//    freopen("my.out", "w", stdout);
-    BPlusTree<Key, int> tree("my_file");
+    freopen("my.out", "w", stdout);
+    BPlusTree<Key, int> tree("my_file", "list_file");
     //将iostream和stdio解绑
     ios_base::sync_with_stdio(false);
     //将输入输出流解绑
@@ -42,7 +43,7 @@ int main() {
         if (cmd == "insert") {
             cin >> value;
             Key key(index, value);
-            tree.Insert(key, value, fileManager, strict);
+            tree.Insert(key, value);
         }
         if (cmd == "delete") {
             cin >> value;
@@ -51,10 +52,18 @@ int main() {
         }
         if (cmd == "find") {
             Key key(index);
-            sjtu::vector<long> vec;
+            sjtu::vector<int> vec;
             tree.Find(key, weak, vec);
-            bool flag = print(vec, "list_file");
-            if (!flag) cout << "null";
+//            bool flag = print(vec, "list_file");
+//            if (!flag) cout << "null";
+            if (vec.empty()) cout << "null";
+            else {
+                int size = vec.size();
+                for (int i = 0; i < size; ++i) {
+                    cout << vec[i] << ' ';
+                }
+            }
+
             std::cout << "\n";
         }
     }
